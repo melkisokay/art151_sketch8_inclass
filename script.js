@@ -29,8 +29,7 @@ nn.on("load", () => {
       },
     },
 
-    // background color
-
+    background:(211, 211, 211)
     // background settings
 
   });
@@ -61,12 +60,36 @@ nn.on("load", () => {
   // player sprite
 
   loadSprite(
-    "name",
-
-    // sprite file
-
-    {
-
+    "player", "assets/bear.png" , {
+      
+      sliceX: 4,
+      sliceY: 3,
+        anims: {
+          "back":{
+          from: 0,
+          to: 2,
+          speed: 5,
+          loop: true,
+        },
+          "left":{
+          from: 3,
+          to: 5,
+          speed: 10,
+          loop: true,
+      },
+          "right":{
+          from: 9,
+          to: 11,
+          speed: 10,
+          loop: true,
+      },
+        forward:{
+          from: 6,
+          to: 8,
+          speed: 5,
+          loop: true,
+        },
+    }
       // sprite animation
 
     }
@@ -88,41 +111,21 @@ nn.on("load", () => {
 
   // enemy sprite
 
-  loadSprite(
-    "name",
+  loadSprite( "enemy", "assets/bug.png");
 
-    // enemy file
-  );
 
   // collectible sprite
 
-  loadSprite(
-    "name",
-
-    // collectible file
-  );
-
+  loadSprite("apple", "assets/apple.png");
 
 
   // AUDIO ASSETS
 
-  loadSound(
-    "name",
+  loadSound("explode", "assets/explode.mp3" );
 
-    // sound file
-  );
+  loadSound( "bell", "assets/bell.mp3"  );
 
-  loadSound(
-    "name",
-
-    // sound file
-  );
-
-  loadMusic(
-    "name",
-
-    // music file
-  );
+  loadMusic("music", "assets/music.mp3" );
 
 
 
@@ -130,16 +133,30 @@ nn.on("load", () => {
 
   function playSoundEffect () {
 
-    // sound logic
-
-  }
+   if(!isPlaying){
+     isPlaying = true;
+     soundEffect = play("bell",
+                        {
+                       volume: 0.04
+  });
+     soundEffect.onEnd(() => {
+       isPlaying = false;
+     });
 
 
 
   function makePlatform (x, y, w, colorValue) {
 
     add([
-
+      rect(w, 40),
+      area(),
+      outline(6),
+      pos(x,y),
+      body({
+        isStatic: true
+      }),
+      color(colorValue),
+      "platform"
       // platform setup
 
     ]);
@@ -151,7 +168,13 @@ nn.on("load", () => {
   function spawnCollectible () {
 
     add([
-
+      sprite("apple"),
+      pos(rand(0,width()), rand(0,height())),
+      scale(rand(0.5,1.5)),
+      rotate(rand(0,65)),
+      area(),
+      anchor("center"),
+      "apple"
       // collectible setup
 
     ]);
@@ -163,11 +186,20 @@ nn.on("load", () => {
   function spawnEnemy () {
 
     const enemy = add([
-
-      // enemy setup
+      sprite("enemy"),
+      pos( rand(100, width()-100),
+          rand(100, height()-100) ),
+      area(),
+      anchor("center"),
+      "enemy"
 
     ]);
 
+    wait(rand(3,30), () => {
+      if(enemy.exist()){
+        destroy(enemy);
+      }
+    });
     // enemy timer
 
   }
