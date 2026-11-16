@@ -200,17 +200,17 @@ nn.on("load", () => {
         destroy(enemy);
       }
     });
-    // enemy timer
 
   }
 
 
 
   function spawnEnemyWave () {
-
-    // wave logic
-
-  }
+    const amount = randi(2,5)
+    for(let i = 0; i < amount; i++){
+      spawnEnemy();
+    }
+    }
 
 
 
@@ -223,51 +223,67 @@ nn.on("load", () => {
     let facing = RIGHT;
 
     const scoreText = add([
-
-      // score display
+      text(gameScore.toString(),{
+          size: 24,
+          }),
+      
+      pos(24,24),
+      color(BLACK),
 
     ]);
 
     const timer = add([
-
-      // timer display
+      text(timeLeft.toFixed(0)),
+      pos(width()-24,24),
+      anchor("topright"),
+      color(BLACK)
 
     ]);
 
 
 
     const player = add([
-
-      // player setup
-
+      sprite("player"),
+      pos(center()),
+      anchor("center"),
+      area(),
+      body({
+        jumpForce: JUMP_FORCE,
+      }),
+        doubleJump(),
     ]);
 
-
+player.play("forward");
 
     // LEVEL EXIT
 
     const levelExit = add([
-
-      // exit setup
-
+      rect(10, height()),
+      pos(width()-10,0),
+      area(),
+      color(GREEN),
+      //opacity(0),
+      "levelExit"
+     
     ]);
 
 
 
     // PLATFORMS
 
-    makePlatform(
-
-      // floor platform
-
-    );
-
-
+    makePlatform(0,height()-24, width(), MAGENTA);
 
     for (let i = 0; i < 5; i++) {
 
       // random platforms
-
+      makePlatform(
+      rand( 0 , 
+        width() - 250),
+        height() - 150 - (i * 100),
+        rand( 50, 230 ),
+        rgb(rand(0,255),0,rand(0,255))
+        
+    );
     }
 
 
@@ -281,8 +297,7 @@ nn.on("load", () => {
     }
 
     // collectible loop
-
-
+loop(5, spawnCollectible);
 
     // ENEMIES
 
@@ -290,7 +305,7 @@ nn.on("load", () => {
 
     // enemy loop
 
-
+loop(15, spawnEnemyWave);
 
     // CONTROLS
 
