@@ -286,8 +286,6 @@ player.play("forward");
     );
     }
 
-
-
     // COLLECTIBLES
 
     for (let i = 0; i < 5; i++) {
@@ -311,7 +309,10 @@ loop(15, spawnEnemyWave);
 
     onButtonDown("moveRight", () => {
 
-      // move right
+      player.move(SPEED, 0);
+      facing = RIGHT,
+      playSoundEffect();
+      player.play("right");
 
     });
 
@@ -319,15 +320,19 @@ loop(15, spawnEnemyWave);
 
     onButtonDown("moveLeft", () => {
 
-      // move left
+     player.move(-SPEED, 0);
+      facing = LEFT,
+      playSoundEffect();
+      player.play("left");
 
     });
 
 
 
     onButtonDown("moveUp", () => {
-
-      // jump logic
+      
+      player.doubleJump();
+      player.play("forward");
 
     });
 
@@ -335,7 +340,9 @@ loop(15, spawnEnemyWave);
 
     onButtonDown("moveDown", () => {
 
-      // move down
+        
+      player.move(0, -SPEED);
+      player.play("back");
 
     });
 
@@ -667,3 +674,25 @@ loop(15, spawnEnemyWave);
   go("level1");
 
 });
+    
+    
+    
+    
+    
+    
+    
+    // onClick("player", (p) => {
+    //   p.use(sprite("kat"));
+    //   play("");
+    //   score += 10;
+    // })
+    
+    player.onCollide("player", (p) => {
+      const playerPos = p.pos;
+      destroy(p);
+      add({
+        sprite(),
+        pos(playerPos),
+        anchor("center")
+      })
+    })
